@@ -1,8 +1,8 @@
-import { KafkaPointsController } from './kafka-points.controller';
-import { PointsService } from './points.service';
+import { KafkaPointsTimescaleController } from './kafka-points-timescale.controller';
+import { PointsTimescaleService } from './points-timescale.service';
 
-describe('KafkaPointsController', () => {
-  let controller: KafkaPointsController;
+describe('KafkaPointsTimescaleController', () => {
+  let controller: KafkaPointsTimescaleController;
   let pointsService: { create: jest.Mock };
 
   const validPayload = {
@@ -19,8 +19,8 @@ describe('KafkaPointsController', () => {
     pointsService = {
       create: jest.fn().mockResolvedValue({}),
     };
-    controller = new KafkaPointsController(
-      pointsService as unknown as PointsService,
+    controller = new KafkaPointsTimescaleController(
+      pointsService as unknown as PointsTimescaleService,
     );
   });
 

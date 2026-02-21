@@ -1,14 +1,14 @@
 import { MethodNotAllowedException } from '@nestjs/common';
-import { GetPointsQueryDto } from './dto/get-points-query.dto';
-import { PointsController } from './points.controller';
-import { PointsService } from './points.service';
+import { GetPointsQueryDto } from '../points/dto/get-points-query.dto';
+import { PointsTimescaleController } from './points-timescale.controller';
+import { PointsTimescaleService } from './points-timescale.service';
 
-describe('PointsController', () => {
+describe('PointsTimescaleController', () => {
   const buildController = () => {
     const pointsService = {
       findAll: jest.fn(),
-    } as unknown as PointsService;
-    const controller = new PointsController(pointsService);
+    } as unknown as PointsTimescaleService;
+    const controller = new PointsTimescaleController(pointsService);
     return { controller, pointsService };
   };
 

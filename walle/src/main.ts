@@ -7,6 +7,7 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { CompressionCodecs, CompressionTypes } from 'kafkajs';
 import { AppModule } from './app.module';
 import { PartitionManagerService } from './app/points/partition-manager.service';
+import { TimescaleBootstrapService } from './app/points-timescale/timescale-bootstrap.service';
 
 // 1. REGISTRO INMEDIATO DE SNAPPY
 try {
@@ -63,13 +64,21 @@ async function bootstrap() {
     },
   });
 
-  // Se garantiza la tabla padre y las particiones necesarias antes de consumir mensajes.
-  const partitionManager = app.get(PartitionManagerService);
-  await partitionManager.createParentTableIfNotExists();
-  await partitionManager.createPartitionForDate(new Date());
-  await partitionManager.createPartitionForDate(
-    new Date(Date.now() + 86_400_000),
-  );
+  // Prepara almacenamiento de puntos antes de iniciar el consumo Kafka.
+  const pointsBackend = (process.env.POINTS_BACKEND ?? 'legacy').toLowerCase();
+  if (pointsBackend === 'timescale') {
+    // Timescale: crea extensiones, hypertable, indices y politicas.
+    const timescaleBootstrap = app.get(TimescaleBootstrapService);
+    await timescaleBootstrap.bootstrap();
+  } else {
+    // Legacy: crea tabla padre y particiones diarias.
+    const partitionManager = app.get(PartitionManagerService);
+    await partitionManager.createParentTableIfNotExists();
+    await partitionManager.createPartitionForDate(new Date());
+    await partitionManager.createPartitionForDate(
+      new Date(Date.now() + 86_400_000),
+    );
+  }
 
   await app.startAllMicroservices();
   await app.listen(process.env.PORT ?? 3700);

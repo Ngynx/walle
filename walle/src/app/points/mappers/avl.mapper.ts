@@ -25,8 +25,17 @@ export const AVLInputToAVLOutputMapper = new GenericMapper<AVLInputD, AVLD>(
       return !!val;
     };
 
-    const lat = getNum('Lat', 'lat');
-    const lng = getNum('Lng', 'lng');
+    const getCoordinate = (key1: string, key2?: string): number => {
+      const val = raw[key1] ?? (key2 ? raw[key2] : undefined);
+      if (val === undefined || val === null || val === '') {
+        return Number.NaN;
+      }
+      const parsed = typeof val === 'number' ? val : Number(val);
+      return Number.isFinite(parsed) ? parsed : Number.NaN;
+    };
+
+    const lat = getCoordinate('Lat', 'lat');
+    const lng = getCoordinate('Lng', 'lng');
     const imei = getNum('Imei', 'imei');
     const timestamp = getNum('Timestamp', 'timestamp');
 
