@@ -9,12 +9,13 @@ import { PointsService } from './points.service';
 export class KafkaPointsController {
   private readonly logger = new Logger(KafkaPointsController.name);
 
-  constructor(private readonly pointsService: PointsService) {}
+  constructor(private readonly pointsService: PointsService) { }
 
-  @MessagePattern('gps_raw')
+  @MessagePattern('gps_devices_normal')
   async handleGpsData(@Payload() data: AVLInputD) {
     try {
       const payload = this.decodePayload(data);
+      // console.log("payload: ", payload);
       if (!payload) return;
 
       // Mapeo y normalización (Case-insensitive, unidades coherentes)

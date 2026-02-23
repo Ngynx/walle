@@ -17,8 +17,8 @@ const pointsSqlDatabaseModule =
     : DatabaseModule.forLegacyPointsApplication();
 
 // Selecciona el modulo de negocio que procesara points.
-const pointsFeatureModule =
-  pointsBackend === 'timescale' ? PointsTimescaleModule : PointsModule;
+// const pointsFeatureModule =
+//   pointsBackend === 'timescale' ? PointsTimescaleModule : PointsModule;
 
 @Module({
   imports: [
@@ -54,9 +54,10 @@ const pointsFeatureModule =
 
     UserModule,
     AuthModule,
-    pointsFeatureModule,
+    // pointsFeatureModule,
+    PointsTimescaleModule
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }

@@ -39,12 +39,14 @@ async function bootstrap() {
     options: {
       client: {
         clientId: process.env.KAFKA_CLIENT_ID || 'walle-client',
+        // clientId: process.env.KAFKA_CLIENT_ID || 'robin-client',
         brokers: [
-          `${process.env.KAFKA_BROKER_IP || 'localhost'}:${process.env.KAFKA_BROKER_PORT || '9092'}`,
+          `${process.env.KAFKA_BROKER_IP || 'localhost'}:${process.env.KAFKA_BROKER_PORT || '9094'}`,
         ],
       },
       consumer: {
         groupId: process.env.KAFKA_GROUP_ID || 'walle-consumer',
+        // groupId: "robin-consumer",
         sessionTimeout: 30000,
         heartbeatInterval: 3000,
         maxWaitTimeInMs: 5000,
@@ -60,6 +62,7 @@ async function bootstrap() {
       },
       subscribe: {
         fromBeginning: false,
+        // fromBeginning: true,
       },
     },
   });

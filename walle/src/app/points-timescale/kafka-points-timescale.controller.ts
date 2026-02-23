@@ -9,12 +9,13 @@ import { PointsTimescaleService } from './points-timescale.service';
 export class KafkaPointsTimescaleController {
   private readonly logger = new Logger(KafkaPointsTimescaleController.name);
 
-  constructor(private readonly pointsService: PointsTimescaleService) {}
+  constructor(private readonly pointsService: PointsTimescaleService) { }
 
-  @MessagePattern('gps_raw')
+  @MessagePattern('gps_devices_normal')
   async handleGpsData(@Payload() data: AVLInputD) {
     try {
       const payload = this.decodePayload(data);
+      // console.log("payload: ", payload);
       if (!payload) return;
 
       const normalizedData = AVLInputToAVLOutputMapper.map(

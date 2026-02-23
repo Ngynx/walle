@@ -6,13 +6,18 @@ import { KafkaPointsTimescaleController } from './kafka-points-timescale.control
 import { PointsTimescaleService } from './points-timescale.service';
 import { TimescaleBootstrapService } from './timescale-bootstrap.service';
 import { TIMESCALE_CONNECTION_NAME } from '../../common/constants/database.constant';
+import { PointGateway } from './gateway/point.gateway';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([PointTimescale], TIMESCALE_CONNECTION_NAME),
   ],
   controllers: [PointsTimescaleController, KafkaPointsTimescaleController],
-  providers: [PointsTimescaleService, TimescaleBootstrapService],
+  providers: [
+    PointsTimescaleService,
+    TimescaleBootstrapService,
+    PointGateway
+  ],
   exports: [TimescaleBootstrapService],
 })
-export class PointsTimescaleModule {}
+export class PointsTimescaleModule { }

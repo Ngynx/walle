@@ -1,5 +1,6 @@
 export const DELTA_DISPATCH_DB_NAME = 'deltaDispatch';
 export const AUTHSOFTWARE_SERVER_DB_NAME = 'authSoftware';
+export const ROBIN_SERVER_DB_NAME = "robinServer"
 export const WALLE_DB_NAME = 'walledb';
 export const TIMESCALE_CONNECTION_NAME = 'timescale';
 //# PostgreSQL

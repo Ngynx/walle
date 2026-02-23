@@ -12,4 +12,4 @@ import { PointsService } from './points.service';
   providers: [PointsService, PartitionManagerService],
   exports: [PartitionManagerService],
 })
-export class PointsModule {}
+export class PointsModule { }

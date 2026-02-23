@@ -1,11 +1,11 @@
-﻿import {
-  Entity,
-  Column,
-  Index,
-  CreateDateColumn,
-  UpdateDateColumn,
-  PrimaryColumn,
-} from 'typeorm';
+﻿import { Entity, Column, Index, CreateDateColumn, UpdateDateColumn, PrimaryColumn, ValueTransformer } from 'typeorm';
+
+/** Convierte el string que devuelve pg para bigint → number de JS */
+const bigintTransformer: ValueTransformer = {
+  to: (value: number) => value,
+  from: (value: string | number | null) =>
+    value !== null && value !== undefined ? Number(value) : null,
+};
 
 @Entity({ name: 'points_timescale', synchronize: false })
 @Index(['trackerDeviceImei', 'timestamp'], { unique: true })
@@ -21,10 +21,10 @@ export class PointTimescale {
   })
   id: string;
 
-  @PrimaryColumn({ type: 'bigint', name: 'timestamp' })
+  @PrimaryColumn({ type: 'bigint', name: 'timestamp', transformer: bigintTransformer })
   timestamp: number;
 
-  @Column({ type: 'bigint', name: 'tracker_device_imei' })
+  @Column({ type: 'bigint', name: 'tracker_device_imei', transformer: bigintTransformer })
   trackerDeviceImei: number;
 
   @Column({
@@ -228,6 +228,7 @@ export class PointTimescale {
     type: 'bigint',
     nullable: true,
     name: 'tracker_device_active_gsm_operator',
+    transformer: bigintTransformer,
   })
   trackerDeviceActiveGsmOperator: number;
 

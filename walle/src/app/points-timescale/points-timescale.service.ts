@@ -5,6 +5,7 @@ import { CreatePointDto } from '../points/dto/create-point.dto';
 import { GetPointsQueryDto } from '../points/dto/get-points-query.dto';
 import { PointTimescale } from './model/point-timescale.model';
 import { TIMESCALE_CONNECTION_NAME } from '../../common/constants/database.constant';
+import { PointGateway } from './gateway/point.gateway';
 
 type FindAllPointsResult = {
   data: PointTimescale[];
@@ -23,7 +24,8 @@ export class PointsTimescaleService {
   constructor(
     @InjectRepository(PointTimescale, TIMESCALE_CONNECTION_NAME)
     private readonly pointsRepository: Repository<PointTimescale>,
-  ) {}
+    private readonly pointsGateway: PointGateway
+  ) { }
 
   async create(createPointDto: CreatePointDto): Promise<PointTimescale | null> {
     const { trackerDeviceImei, timestamp, location } = createPointDto;
@@ -53,6 +55,18 @@ export class PointsTimescaleService {
         .orIgnore() // Evita error por duplicados (imei + timestamp).
         .returning('*')
         .execute();
+
+      if (insertResult.generatedMaps.length > 0) {
+        // QueryBuilder.execute() no aplica ValueTransformer → convertimos bigints manualmente
+        const point = insertResult.raw[0] as Record<string, any>;
+        const parsed = {
+          ...point,
+          timestamp: point.timestamp !== null ? Number(point.timestamp) : null,
+          tracker_device_imei: point.tracker_device_imei !== null ? Number(point.tracker_device_imei) : null,
+          tracker_device_active_gsm_operator: point.tracker_device_active_gsm_operator !== null ? Number(point.tracker_device_active_gsm_operator) : null,
+        };
+        this.pointsGateway.sendGpsPoint(parsed);
+      };
 
       if (insertResult.generatedMaps.length === 0) {
         return null;

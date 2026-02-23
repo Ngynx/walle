@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import {
   AUTHSOFTWARE_SERVER_DB_NAME,
   DELTA_DISPATCH_DB_NAME,
+  ROBIN_SERVER_DB_NAME,
   TIMESCALE_CONNECTION_NAME,
 } from 'src/common/constants/database.constant';
 import { getPostgresDatabaseConfig } from './config/database-postgresql.config';
@@ -74,11 +75,11 @@ export class DatabaseModule {
     };
   }
 
-  // static forRobinApplication(_uri: string): DynamicModule {
-  //     return {
-  //         module: DatabaseModule,
-  //         imports: [MongooseModule.forRoot(_uri, { connectionName: ROBIN_SERVER_DB_NAME })],
-  //         exports: [MongooseModule]
-  //     }
-  // };
+  static forRobinApplication(_uri: string): DynamicModule {
+    return {
+      module: DatabaseModule,
+      imports: [MongooseModule.forRoot(_uri, { connectionName: ROBIN_SERVER_DB_NAME })],
+      exports: [MongooseModule]
+    }
+  };
 }

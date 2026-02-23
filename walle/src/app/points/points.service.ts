@@ -29,7 +29,7 @@ export class PointsService {
     @InjectRepository(Point)
     private readonly pointsRepository: Repository<Point>,
     private readonly partitionManagerService: PartitionManagerService,
-  ) {}
+  ) { }
 
   /**
    * Persiste un punto en la base de datos de manera inmediata.
@@ -66,6 +66,12 @@ export class PointsService {
         .orIgnore() // Deduplicación: Si el punto ya existe (IMEI + Timestamp), no falla.
         .returning('*')
         .execute();
+
+      // console.log("insertResult: ", insertResult);
+      // //** SOCKET */
+      // if (avlNewDocument) {
+      //   this.avlGateway.handleEvent(insertResult);
+      // };
 
       if (insertResult.generatedMaps.length === 0) {
         return null; // El punto era un duplicado y fue ignorado por orIgnore()
